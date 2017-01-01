@@ -8,6 +8,11 @@ docker run -it \
        -v $HOME/.Xauthority:/home/developer/.Xauthority \
        --net=host \
        -v $(pwd):/home/vscode/go/src/app \
-       --rm ctaggart/golang-vscode \
-       su - vscode -c "export GOPATH=/home/vscode/go ; code -w go/src/app"
-#       -e GOPATH=/home/vscode/app \
+       --rm kpage/golang-vscode \
+       su - vscode -c "code -w go/src/app"
+
+# su - vscode -c "code -w go/src/app"
+
+#       su - vscode -c "code"
+       #       su - vscode -c "export GOPATH=/home/vscode/go ; code -w go/src/app"
+
