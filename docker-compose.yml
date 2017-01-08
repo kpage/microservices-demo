@@ -10,6 +10,12 @@ services:
     command: /bin/bash -c "cd /go/src/dockerized-go-app/rest-api ; gin"
     ports:
       - 3000:3000
+    environment:
+      - DB_USERNAME=root
+      - DB_PASSWORD=rewt
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=restbucks
   db:
     image: mariadb:10.1.16
     environment:

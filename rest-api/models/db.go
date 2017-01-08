@@ -2,6 +2,8 @@ package models
 
 import (
 	"database/sql"
+	"fmt"
+	"os"
 
 	// Necessary to import mysql drivers
 	_ "github.com/go-sql-driver/mysql"
@@ -16,13 +18,9 @@ type DB struct {
 }
 
 func NewDB() (*DB, error) {
-	// TODO: pull these out into env vars?  How does this work best with docker-compose and kubernetes?
-	//  - username
-	//  - password
-	//  - db hostname
-	//  - db port
-	//  - db name
-	db, err := sql.Open("mysql", "root:rewt@tcp(db:3306)/restbucks")
+	// TODO: print helpful error message when required env vars are not passed
+	connectionStr := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", os.Getenv("DB_USERNAME"), os.Getenv("DB_PASSWORD"), os.Getenv("DB_HOST"), os.Getenv("DB_PORT"), os.Getenv("DB_NAME"))
+	db, err := sql.Open("mysql", connectionStr)
 	if err != nil {
 		return nil, err
 	}
