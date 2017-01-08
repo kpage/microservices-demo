@@ -1,0 +1,13 @@
+version: '2'
+services: 
+  rest-api:
+#  links:
+#    - "db:db"
+    build: rest-api
+    volumes:
+      - ./rest-api:/go/src/app
+#  command: node ./src/hello.js
+    ports:
+      - 3000:3000
+#  environment:
+#      - NODE_ENV=development
