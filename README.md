@@ -7,6 +7,10 @@ To use:
     $ cd dockerized-go-app
     $ docker-compose up
 
+If you have not yet run migrations, then also run:
+
+    $ ./migrate-db.sh
+
 The app used to demo this capability is a small "Hello World" web app.
 
 Current capabilities:

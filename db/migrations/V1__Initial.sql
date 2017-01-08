@@ -3,5 +3,3 @@ create table books (
 	Title  varchar(255),
 	Author varchar(255),
 	Price  decimal);
-
-	
