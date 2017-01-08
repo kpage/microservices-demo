@@ -11,6 +11,9 @@ Current capabilities:
 
 So far this has only been tested on linux, would probably need further instructions to get X windows working on Mac/Win.
 
+Refresh database schema:
+  $ docker-compose rm db
+
 TODOs:
 
 - vscode.sh: start preconfigured Visual Studio Code editor in this folder.

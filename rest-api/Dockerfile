@@ -1,12 +1,6 @@
 FROM golang:wheezy
 
-RUN mkdir -p /go/src/app
-WORKDIR /go/src/app
+RUN mkdir -p /go/src
+WORKDIR /go/src
 
 RUN go get github.com/codegangsta/gin
-
-ENTRYPOINT ["/root/installAndStart.sh"]
-
-ADD installAndStart.sh /root/
-RUN chmod 755 /root/installAndStart.sh
-RUN chmod +x /root/installAndStart.sh
