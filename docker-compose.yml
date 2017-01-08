@@ -25,20 +25,9 @@ services:
       - 3306:3306
 #    volumes:
 #     - ./database:/var/lib/mysql
-#     - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql:ro
-# Waits for db to be available on port 3306.  Used by migrate.sh
-  db-wait:
-    image: dadarek/wait-for-dependencies
-    depends_on:
-      - db
-    command: db:3306
-    environment:
-      - SLEEP_LENGTH=0.5
-# TODO: repackage this image with wait-for-it to wait for db:3306 before starting so it does not need to be run manually.
-# At the moment, this fails because it runs before db:3306 is available
   db-migrations:
-    image: dhoer/flyway
-    command: -url=jdbc:mysql://db -schemas=restbucks -user=root -password=rewt migrate
+    image: pagekb/docker-flyway
+    command: ./wait-for-it.sh db:3306 -s -- flyway -url=jdbc:mysql://db -schemas=restbucks -user=root -password=rewt migrate
     volumes:
       - ./db/migrations:/flyway/sql
     depends_on:

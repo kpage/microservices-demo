@@ -15,6 +15,7 @@ type Env struct {
 }
 
 func main() {
+	fmt.Println("rest-api starting...")
 	db, err := models.NewDB()
 	if err != nil {
 		log.Panic(err)
@@ -27,7 +28,7 @@ func main() {
 	r.HandleFunc("/books", env.booksIndex)
 	http.Handle("/", r)
 
-	fmt.Println("Starting up on 3001")
+	fmt.Println("rest-api serving on 3001")
 	log.Fatal(http.ListenAndServe(":3001", nil))
 }
 
