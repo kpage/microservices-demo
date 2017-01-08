@@ -1,5 +1,12 @@
 The goal of this repo is to demo a golang development environment running in containers.
 
+To use:
+
+    $ cd $GOPATH/src
+    $ git clone TODO-put-url-of-this-project
+    $ cd dockerized-go-app
+    $ docker-compose up
+
 The app used to demo this capability is a small "Hello World" web app.
 
 Current capabilities:
