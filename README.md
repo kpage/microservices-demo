@@ -14,7 +14,7 @@ Current capabilities:
 - run.sh: start the server using hot reloading with "gin".
 -- Starts the gin server on port 3000 inside a docker container.
 -- Changes made to app.go are automatically reloaded on the next http request.
-- vendor.sh: run every time third party go dependencies change, then check in the changed vendor folder.
+- govendor.sh: run every time third party go dependencies change, then check in the changed vendor folder.
 
 So far this has only been tested on linux, would probably need further instructions to get X windows working on Mac/Win.
 
