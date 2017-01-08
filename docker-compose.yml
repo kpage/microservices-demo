@@ -1,8 +1,9 @@
 version: '2'
 services: 
   rest-api:
-#  links:
-#    - "db:db"
+    links:
+      - "db:db"
+# TODO: maybe use a separate generic go/gin dev image and reserve rest-api/Dockerfile for prod packaging?
     build: rest-api
     volumes:
       - ./rest-api:/go/src/app
@@ -11,3 +12,12 @@ services:
       - 3000:3000
 #  environment:
 #      - NODE_ENV=development
+  db:
+    image: mariadb:10.1.16
+    environment:
+      - MYSQL_ROOT_PASSWORD=rewt
+      - MYSQL_DATABASE=restbucks
+    ports:
+      - 3306:3306
+#    volumes:
+#     - ./database:/var/lib/mysql
