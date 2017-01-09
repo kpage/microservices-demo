@@ -16,6 +16,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=restbucks
+      - LOGXI=*
   db:
     image: mariadb:10.1.16
     environment:

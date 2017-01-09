@@ -3,33 +3,36 @@ package main
 import (
 	"dockerized-go-app/rest-api/models"
 	"fmt"
-	"log"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
+	"github.com/mgutz/logxi/v1"
 )
 
 type Env struct {
 	db models.Datastore
+	// TODO: how to pass around this logger to other packages?  Or should each package define its own logger?
+	logger log.Logger
 }
 
 func main() {
-	fmt.Println("rest-api starting...")
-	db, err := models.NewDB()
+	logger := log.New("")
+	logger.Info("rest-api starting...")
+	db, err := models.NewDB(logger)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal("Could not open database", "err", err)
 	}
 
-	env := &Env{db}
+	env := &Env{db, logger}
 
 	r := mux.NewRouter()
 	r.HandleFunc("/", hello)
 	r.HandleFunc("/books", env.booksIndex)
 	http.Handle("/", r)
 
-	fmt.Println("rest-api serving on 3001")
-	log.Fatal(http.ListenAndServe(":3001", nil))
+	logger.Info("rest-api serving on 3001")
+	logger.Fatal("Serving", "err", http.ListenAndServe(":3001", nil))
 }
 
 func hello(w http.ResponseWriter, req *http.Request) {

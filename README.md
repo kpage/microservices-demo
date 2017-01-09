@@ -30,3 +30,7 @@ TODOs:
 - vscode.sh: start preconfigured Visual Studio Code editor in this folder.
 -- Uses X forwarding to display the GUI
 -- Right now VS Code running inside docker starts and displays the GUI, but crashes on my system when opening a folder with no error message.  I spent a few hours trying to experiment/debug but was unable to get this working.
+
+Architecture of this app:
+- rest-api: a REST API implemented in golang
+- db: a mariadb database
