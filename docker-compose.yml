@@ -23,7 +23,9 @@ services:
       - MYSQL_ROOT_PASSWORD=rewt
       - MYSQL_DATABASE=restbucks
     ports:
-      - 3306:3306
+# Linked containers will use standard db port, but exposing as 3336 on host to avoid conflicting with
+# other existing DB that may be installed
+      - 3336:3306
 #    volumes:
 #     - ./database:/var/lib/mysql
   db-migrations:
