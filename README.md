@@ -27,6 +27,8 @@ Refresh database schema:
 
 TODOs:
 
+- node_modules: store base node_modules image that is usable by prod and ensures same modules for all devs.  Right now, node_modules will be created for each dev separately, although
+  this should not be a problem due to yarn.lock
 - vscode.sh: start preconfigured Visual Studio Code editor in this folder.
 -- Uses X forwarding to display the GUI
 -- Right now VS Code running inside docker starts and displays the GUI, but crashes on my system when opening a folder with no error message.  I spent a few hours trying to experiment/debug but was unable to get this working.

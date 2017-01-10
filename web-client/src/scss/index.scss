@@ -1,0 +1,7 @@
+// You can override the grommet brand colors by redefining them before
+// importing the grommet scss
+// Example color palette: http://www.color-hex.com/color-palette/8208
+$brand-color: #0b421a;
+$brand-accent-colors: (#fffcfc, #eac784);
+
+@import '~grommet/scss/vanilla/index';

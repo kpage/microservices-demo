@@ -1,0 +1,6 @@
+# We use dist instead of build
+/dist/
+
+# NPM
+/npm-debug.log
+/node_modules/

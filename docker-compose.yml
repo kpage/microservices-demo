@@ -33,3 +33,13 @@ services:
       - ./db/migrations:/flyway/sql
     depends_on:
       - db
+  web-client:
+    build: ./web-client
+    user: node
+    ports:
+      - 4000:4000
+    volumes:
+      - ./web-client:/home/node/app
+      - /home/node/app/node_modules
+    depends_on:
+      - rest-api
