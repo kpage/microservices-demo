@@ -41,6 +41,10 @@ Updating node packages:
     $ docker-compose run web-client yarn add redux
 - You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
 
+REST API Tests:
+
+The REST API tests are designed to run in the docker-compose environment against a live server.  If you start with "docker-compose up", the tests will continuously
+run when any go code is changed.  Tests are written in go in api_test.go and are run from the rest-api-integration-tester container.
 
 TODOs:
 

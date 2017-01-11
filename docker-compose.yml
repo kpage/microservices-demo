@@ -18,6 +18,12 @@ services:
       - DB_PORT=3306
       - DB_NAME=restbucks
       - LOGXI=*
+  rest-api-integration-tester:
+    build: ./rest-api-integration-tester
+    volumes:
+      - ./rest-api:/go/src/dockerized-go-app/rest-api
+    links:
+      - rest-api
   db:
     image: mariadb:10.1.16
     environment:
@@ -27,8 +33,6 @@ services:
 # Linked containers will use standard db port, but exposing as 3336 on host to avoid conflicting with
 # other existing DB that may be installed
       - 3336:3306
-#    volumes:
-#     - ./database:/var/lib/mysql
   db-migrations:
     image: pagekb/docker-flyway
     command: ./wait-for-it.sh db:3306 -s -- flyway -url=jdbc:mysql://db -schemas=restbucks -user=root -password=rewt migrate

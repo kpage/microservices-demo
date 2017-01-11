@@ -22,7 +22,6 @@ func Handlers(logger *log.Logger, db models.Datastore) *mux.Router {
 	r := mux.NewRouter()
 	r.HandleFunc("/", hello).Methods("GET")
 	r.HandleFunc("/books", env.booksIndex).Methods("GET")
-	//http.Handle("/", r)
 	return r
 }
 
