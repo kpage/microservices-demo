@@ -23,7 +23,24 @@ Current capabilities:
 So far this has only been tested on linux, would probably need further instructions to get X windows working on Mac/Win.
 
 Refresh database schema:
-  $ docker-compose rm db
+    $ docker-compose rm db
+
+Updating node packages:
+- Usually you don't need to edit package.json or yarn.lock directly.  You can use yarn commands to manage packages.
+- After running any yarn command, always do the following:
+    $ docker-compose build web-client
+    $ docker-compose restart web-client
+- When satisfied with changes, check in both package.json and yarn.lock
+- TODO: create command to publish a new web-client base image with latest node_modules inside and update 
+  Dockerfile to use it
+- Example, to upgrade a single existing package to a specified version (example, upgrade webpack to 1.13.3):
+    $ docker-compose run web-client yarn upgrade webpack@1.13.3
+    $ docker-compose build web-client
+    $ docker-compose restart web-client
+- To add a new package:
+    $ docker-compose run web-client yarn add redux
+- You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
+
 
 TODOs:
 
