@@ -1,31 +1,40 @@
-The goal of this repo is to demo a golang development environment running in containers.
+The goal of this repo is to demo a development environment running in docker-compose.
 
-To use:
+To use, first install docker and docker-compose.  Then:
 
     $ cd $GOPATH/src
-    $ git clone TODO-put-url-of-this-project
+    $ git clone https://github.com/kpage/dockerized-go-app
     $ cd dockerized-go-app
     $ docker-compose up
 
-If you have not yet run migrations, then also run:
-
-    $ ./migrate-db.sh
-
-The app used to demo this capability is a small "Hello World" web app.
-
 Current capabilities:
 
-- run.sh: start the server using hot reloading with "gin".
--- Starts the gin server on port 3000 inside a docker container.
--- Changes made to app.go are automatically reloaded on the next http request.
+- Changes made to .go files will reload the server automatically
 - govendor.sh: run every time third party go dependencies change, then check in the changed vendor folder.
 
-So far this has only been tested on linux, would probably need further instructions to get X windows working on Mac/Win.
+## REST API
 
-Refresh database schema:
+The REST API is written in golang.
+
+#### REST API Tests:
+
+The REST API tests are designed to run in the docker-compose environment against a live server.  If you start with "docker-compose up", the tests will continuously
+run when any go code is changed.  Tests are written in go in api_test.go and are run from the rest-api-integration-tester container.
+
+## Database
+
+Runs mariadb in a container.  If you want to connect directly to the db, it exposes port 3336 on your host.
+
+To refresh the database schema:
     $ docker-compose rm db
 
-Updating node packages:
+## Web client
+
+TODO: add a frontend web client in HTML & JS to demonstrate using the REST API.  The build is working right now, but the code was
+scavenged from an unrelated project that does not actually exercise the API in this project yet.
+
+#### Updating node packages:
+
 - Usually you don't need to edit package.json or yarn.lock directly.  You can use yarn commands to manage packages.
 - After running any yarn command, always do the following:
     $ docker-compose build web-client
@@ -40,11 +49,6 @@ Updating node packages:
 - To add a new package:
     $ docker-compose run web-client yarn add redux
 - You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
-
-REST API Tests:
-
-The REST API tests are designed to run in the docker-compose environment against a live server.  If you start with "docker-compose up", the tests will continuously
-run when any go code is changed.  Tests are written in go in api_test.go and are run from the rest-api-integration-tester container.
 
 TODOs:
 
