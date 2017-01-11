@@ -5,7 +5,6 @@ RUN wget -O /usr/local/bin/dumb-init https://github.com/Yelp/dumb-init/releases/
 RUN chmod +x /usr/local/bin/dumb-init
 
 ENV HOME=/home/node
-# TODO: what is this for?
 ARG NODE_ENV
 ENV NODE_ENV $NODE_ENV
 
@@ -22,7 +21,9 @@ RUN chown -R node:node $HOME
 
 # We use the "node" user because this will be the same user that runs the
 # container, so any files created by 'node' user during the gulp build will
-# have the correct permissions on the host
+# have the correct permissions on the host.  This only works if the user
+# running docker is uid 1000, which should be true on most single-user dev
+# machines
 USER node
 
 WORKDIR $HOME/app
@@ -30,7 +31,6 @@ RUN yarn install
 
 COPY entrypoint.sh $HOME/app/
 
-# Runs "/usr/bin/dumb-init -- /my/script --with --args"
 ENTRYPOINT ["/usr/local/bin/dumb-init", "--", "sh", "entrypoint.sh"]
 
 CMD ["node", "server.js"]

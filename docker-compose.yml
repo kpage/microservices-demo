@@ -12,8 +12,8 @@ services:
     ports:
       - 3000:3000
     environment:
-      - DB_USERNAME=root
-      - DB_PASSWORD=rewt
+      - DB_USERNAME=restbucks
+      - DB_PASSWORD=restbucks
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=restbucks
@@ -29,6 +29,9 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD=rewt
       - MYSQL_DATABASE=restbucks
+      - MYSQL_USER=restbucks
+      - MYSQL_PASSWORD=restbucks
+      - LANG=C.UTF-8
     ports:
 # Linked containers will use standard db port, but exposing as 3336 on host to avoid conflicting with
 # other existing DB that may be installed
