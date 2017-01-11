@@ -7,7 +7,8 @@ services:
     build: ./rest-api
     volumes:
       - ./rest-api:/go/src/dockerized-go-app/rest-api
-    command: /bin/bash -c "cd /go/src/dockerized-go-app/rest-api ; gin"
+    working_dir: /go/src/dockerized-go-app/rest-api
+    command: gin
     ports:
       - 3000:3000
     environment:
