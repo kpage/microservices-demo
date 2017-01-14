@@ -19,6 +19,41 @@ Current capabilities:
 
 The REST API is written in golang.
 
+Third-party dependencies are handled by "vendoring".  This means copying the source of the dependency into the "vendor" folder
+and checking it in to git.
+
+If you need to add another third-party dependency, first add it to the "import" section of a .go file.  Example:
+
+```
+import (
+	"github.com/gorilla/mux"
+)
+```
+
+Some editors such as Visual Studio Code automatically remove unused imports, so you might need to also use the dependency
+in your code:
+
+```
+r := mux.NewRouter()
+```
+
+Next, run our vendoring script:
+
+```
+    $ cd rest-api
+    $ ./govendor.sh
+    $ git status
+```
+
+You should now see your dependency in the "vendor" directory and your code should compile correctly.  You might have to
+restart Visual Studio Code to get it to recognize the new vendor package.
+
+Make sure to add your changes to git:
+
+```
+    $ git add rest-api/vendor
+    $ git commit
+```
 #### REST API Tests:
 
 The REST API tests are designed to run in the docker-compose environment against a live server.  If you start with "docker-compose up", the tests will continuously
