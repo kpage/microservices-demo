@@ -1,14 +1,13 @@
 version: '2'
-services: 
+services:
   rest-api:
     links:
       - "db:db"
 # TODO: maybe use a separate generic go/gin dev image and reserve rest-api/Dockerfile for prod packaging?
     build: ./rest-api
     volumes:
-      - ./rest-api:/go/src/dockerized-go-app/rest-api
-    working_dir: /go/src/dockerized-go-app/rest-api
-    command: gin
+      - ./rest-api:/go/src/dockerized-go-app/rest-api:ro
+    command: gin -t /go/src/dockerized-go-app/rest-api
     ports:
       - 3000:3000
     environment:
