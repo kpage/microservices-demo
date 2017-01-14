@@ -30,10 +30,23 @@ Runs mariadb in a container.  If you want to connect directly to the db, it expo
 
 To drop the database and refresh the schema:
 
+```
     $ docker-compose stop db
     $ docker-compose rm db
     $ docker-compose up -d db
     $ docker-compose up -d db-migrations
+```
+
+Database migrations are handled with flyway.  They will run automatically after docker-compose up.  If you add a new migration,
+you can run it with:
+
+```
+    $ docker-compose up -d db-migrations
+```
+
+TODO: for production, db migrations could maybe be handled as Kubernetes Jobs.  For example, when a new migration needs to
+be run, we could have a job that snapshots the db and runs flyway in a migration container containing the migration scripts.
+This could be deployed separately from the other services to run migrations in preparation for new code changes.
 
 ## Web client
 
