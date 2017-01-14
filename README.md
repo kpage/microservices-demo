@@ -66,7 +66,9 @@ this should not be a problem due to yarn.lock
 
 - To add a new package:
 
+```
     $ docker-compose run web-client yarn add redux
+```
 
 - You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
 
