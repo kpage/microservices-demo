@@ -19,8 +19,8 @@ Current capabilities:
 
 The REST API is written in golang.
 
-Documentation is at http://localhost:3000/docs/
-TODO: get this working without trailing slash.  Only works with trailing slash right now.
+The API is self-documenting using the HAL hypermedia format.  If you request any api url with header "Accept: application/hal+json" you will get a json response, otherwise
+you will get an HTML page with documentation about that url.
 
 Third-party dependencies are handled by "vendoring".  This means copying the source of the dependency into the "vendor" folder
 and checking it in to git.
@@ -124,6 +124,7 @@ this should not be a problem due to yarn.lock
 - You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
 
 ## Architecture of this app:
+- router & load balancer: nginx
 - rest-api: a REST API implemented in golang
 - db: a mariadb database
 

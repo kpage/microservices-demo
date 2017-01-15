@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 
 	"github.com/gorilla/mux"
 	"github.com/mgutz/logxi/v1"
@@ -23,12 +22,8 @@ var env *environment
 func Handlers(logger log.Logger, db models.Datastore) *mux.Router {
 	env = &environment{logger, db}
 	r := mux.NewRouter()
-	// Serve HTML API documentation (HAL Browser)
-	dir := os.Getenv("REST_API_HTML_DOCS_ROOT")
-	logger.Info("Serving static files from: ", "dir", dir)
-	r.PathPrefix("/docs").Handler(http.StripPrefix("/docs/", http.FileServer(http.Dir(dir))))
-	r.HandleFunc("/", apiRoot).Methods("GET")
-	r.HandleFunc("/books", env.booksIndex).Methods("GET")
+	r.HandleFunc("/api", apiRoot).Methods("GET")
+	r.HandleFunc("/api/books", env.booksIndex).Methods("GET")
 	return r
 }
 
@@ -37,8 +32,8 @@ func apiRoot(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(405), 405)
 		return
 	}
-	rr := hal.NewResource(models.APIRoot{}, "/")
-	rr.AddNewLink("books", "/books")
+	rr := hal.NewResource(models.APIRoot{}, "/api")
+	rr.AddNewLink("books", "/api/books")
 	// TODO: add links to all possible APIs
 
 	// JSON Encoding
@@ -60,10 +55,10 @@ func (env *environment) booksIndex(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
-	rr := hal.NewResource(models.BookResponse{}, "/books")
+	rr := hal.NewResource(models.BookResponse{}, "/api/books")
 	for _, bk := range bks {
 		// Creating HAL Resources
-		rb := hal.NewResource(bk, fmt.Sprintf("/books/%s", bk.Isbn))
+		rb := hal.NewResource(bk, fmt.Sprintf("/api/books/%s", bk.Isbn))
 		// TODO: this embedding will create a json object, not an array, if there is only one item here.  Maybe there is
 		// some way to always force array type?
 		rr.Embed("books", rb)

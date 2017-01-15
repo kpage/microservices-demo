@@ -23,13 +23,13 @@ func waitForGin() {
 	case <-ch:
 		// ok!
 	case <-time.After(time.Second * 5):
-		log.Fatal("REST API tests unable to connect to http://rest-api:3000 after 5 seconds!")
+		log.Fatal("REST API tests unable to connect to http://rest-api:3000/api after 5 seconds!")
 	}
 }
 
 // Will GET forever until it succeeds, then write true to the passed channel
 func getUntilSuccess(ch chan<- bool) {
-	res, err := http.Get("http://rest-api:3000")
+	res, err := http.Get("http://rest-api:3000/api")
 	if err != nil || res == nil || res.StatusCode != 200 {
 		// If we don't get 200 OK, wait a bit and try again
 		time.Sleep(time.Millisecond * 500)
@@ -39,7 +39,7 @@ func getUntilSuccess(ch chan<- bool) {
 }
 
 func TestRoot(t *testing.T) {
-	res, err := http.Get("http://rest-api:3000")
+	res, err := http.Get("http://rest-api:3000/api")
 	if err != nil {
 		t.Error(err)
 	}
@@ -55,10 +55,10 @@ func TestRoot(t *testing.T) {
 	expected := `{
   "_links": {
     "self": {
-      "href": "/"
+      "href": "/api"
     },
 	"books": {
-      "href": "/books"
+      "href": "/api/books"
 	}
   }
 }`
@@ -66,7 +66,7 @@ func TestRoot(t *testing.T) {
 }
 
 func Test404(t *testing.T) {
-	request, err := http.NewRequest("GET", "http://rest-api:3000/url-does-not-exist", nil)
+	request, err := http.NewRequest("GET", "http://rest-api:3000/api/url-does-not-exist", nil)
 	res, err := http.DefaultClient.Do(request)
 	if err != nil {
 		t.Error(err)
@@ -80,7 +80,7 @@ func Test404(t *testing.T) {
 func TestBooks(t *testing.T) {
 	// TODO: stage some book data and assert that at least this data is present (ignore additional data?)
 	// if this is a paginated API this may be difficult
-	res, err := http.Get("http://rest-api:3000/books")
+	res, err := http.Get("http://rest-api:3000/api/books")
 	if err != nil {
 		t.Error(err)
 	}
@@ -99,7 +99,7 @@ func TestBooks(t *testing.T) {
       {
         "_links": {
           "self": {
-            "href": "/books/ASDFAS23234"
+            "href": "/api/books/ASDFAS23234"
           }
         },
         "author": "George R.R. Martin",
@@ -110,7 +110,7 @@ func TestBooks(t *testing.T) {
       {
         "_links": {
           "self": {
-            "href": "/books/HJKL9898"
+            "href": "/api/books/HJKL9898"
           }
         },
         "author": "Stieg Larsson",
@@ -122,7 +122,7 @@ func TestBooks(t *testing.T) {
   },
   "_links": {
     "self": {
-      "href": "/books"
+      "href": "/api/books"
     }
   }
 }`

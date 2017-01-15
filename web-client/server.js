@@ -9,12 +9,6 @@ var app = express();
 var compiler = webpack(config);
 
 app.use(history());
-app.use(proxy('/api',
-	      {
-		  target: 'http://rest-api:3000',
-		  changeOrigin: true,
-		  xfwd: true
-	      }));
 
 app.use(require('webpack-dev-middleware')(compiler, {
     noInfo: true,
@@ -29,5 +23,5 @@ app.listen(4000, '0.0.0.0', (err) => {
       return;
     }
   
-    console.log('Listening at http://localhost:4000');
+    console.log('Web client hot reloading server listening at port 4000...');
 });
