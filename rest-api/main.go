@@ -17,5 +17,5 @@ func main() {
 		logger.Fatal("Could not open database", "err", err)
 	}
 	logger.Info("rest-api is up and serving on 3001")
-	logger.Fatal("Serving", "err", http.ListenAndServe(":3001", api.Handlers(&logger, db)))
+	logger.Fatal("Serving", "err", http.ListenAndServe(":3001", api.Handlers(logger, db)))
 }

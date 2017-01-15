@@ -19,6 +19,9 @@ Current capabilities:
 
 The REST API is written in golang.
 
+Documentation is at http://localhost:3000/docs/
+TODO: get this working without trailing slash.  Only works with trailing slash right now.
+
 Third-party dependencies are handled by "vendoring".  This means copying the source of the dependency into the "vendor" folder
 and checking it in to git.
 

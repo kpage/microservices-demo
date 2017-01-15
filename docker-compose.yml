@@ -15,6 +15,7 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=restbucks
+      - REST_API_HTML_DOCS_ROOT=/go/src/dockerized-go-app/rest-api/static
       - LOGXI=*
   rest-api-integration-tester:
     build: ./rest-api-integration-tester

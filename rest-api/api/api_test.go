@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func init() {
@@ -36,7 +38,7 @@ func getUntilSuccess(ch chan<- bool) {
 	ch <- true
 }
 
-func TestHelloWorld(t *testing.T) {
+func TestRoot(t *testing.T) {
 	res, err := http.Get("http://rest-api:3000")
 	if err != nil {
 		t.Error(err)
@@ -49,13 +51,18 @@ func TestHelloWorld(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 	}
-	// Check the response body is what we expect.
 	body := string(bodyBytes)
-	expected := "Hello world!\n"
-	if body != expected {
-		t.Errorf("handler returned unexpected body: got %v want %v",
-			body, expected)
+	expected := `{
+  "_links": {
+    "self": {
+      "href": "/"
+    },
+	"books": {
+      "href": "/books"
 	}
+  }
+}`
+	assert.JSONEq(t, expected, body)
 }
 
 func Test404(t *testing.T) {
@@ -67,4 +74,57 @@ func Test404(t *testing.T) {
 	if res.StatusCode != 404 {
 		t.Errorf("404 expected: %d", res.StatusCode)
 	}
+}
+
+// TODO: remove all books stuff and switch to coffee/orders for restbucks
+func TestBooks(t *testing.T) {
+	// TODO: stage some book data and assert that at least this data is present (ignore additional data?)
+	// if this is a paginated API this may be difficult
+	res, err := http.Get("http://rest-api:3000/books")
+	if err != nil {
+		t.Error(err)
+	}
+	if res.StatusCode != 200 {
+		t.Errorf("200 expected: %d", res.StatusCode)
+	}
+	defer res.Body.Close()
+	bodyBytes, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		t.Error(err)
+	}
+	body := string(bodyBytes)
+	expected := `{
+  "_embedded": {
+    "books": [
+      {
+        "_links": {
+          "self": {
+            "href": "/books/ASDFAS23234"
+          }
+        },
+        "author": "George R.R. Martin",
+        "isbn": "ASDFAS23234",
+        "price": 32.3,
+        "title": "A Dance With Dragons"
+      },
+      {
+        "_links": {
+          "self": {
+            "href": "/books/HJKL9898"
+          }
+        },
+        "author": "Stieg Larsson",
+        "isbn": "HJKL9898",
+        "price": 9.99,
+        "title": "The Girl With the Dragon Tattoo"
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "/books"
+    }
+  }
+}`
+	assert.JSONEq(t, expected, body)
 }
