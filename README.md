@@ -3,8 +3,8 @@ The goal of this repo is to demo a development environment running in docker-com
 To use, first install docker and docker-compose.  Then:
 
     $ cd $GOPATH/src
-    $ git clone https://github.com/kpage/dockerized-go-app
-    $ cd dockerized-go-app
+    $ git clone https://github.com/kpage/microservices-demo
+    $ cd microservices-demo
     $ docker-compose up
 
 It's not required to put this project in your GOPATH to run it from the command line, but if you want

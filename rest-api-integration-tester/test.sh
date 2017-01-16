@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd /go/src/dockerized-go-app/rest-api
+cd /go/src/microservices-demo/rest-api
 exec reflex -r '\.go$' -- go test api/api_test.go
 
 # TODO: this should also re-run integration tests when new SQL migrations are added.  Could mount the migrations folder

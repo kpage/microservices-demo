@@ -1,7 +1,7 @@
 package api
 
 import (
-	"dockerized-go-app/rest-api/models"
+	"microservices-demo/rest-api/models"
 	"encoding/json"
 	"fmt"
 	"net/http"

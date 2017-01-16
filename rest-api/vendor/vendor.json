@@ -7,11 +7,11 @@
 			"revision": ""
 		},
 		{
-			"path": "dockerized-go-app/rest-api/api",
+			"path": "microservices-demo/rest-api/api",
 			"revision": ""
 		},
 		{
-			"path": "dockerized-go-app/rest-api/models",
+			"path": "microservices-demo/rest-api/models",
 			"revision": ""
 		},
 		{
@@ -87,5 +87,5 @@
 			"revisionTime": "2016-12-14T18:38:57Z"
 		}
 	],
-	"rootPath": "dockerized-go-app"
+	"rootPath": "microservices-demo"
 }

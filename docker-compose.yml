@@ -16,20 +16,20 @@ services:
       - "db:db"
     image: pagekb/golang-gin
     volumes:
-      - ./rest-api:/go/src/dockerized-go-app/rest-api:ro
-    command: gin -t /go/src/dockerized-go-app/rest-api
+      - ./rest-api:/go/src/microservices-demo/rest-api:ro
+    command: gin -t /go/src/microservices-demo/rest-api
     environment:
       - DB_USERNAME=restbucks
       - DB_PASSWORD=restbucks
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=restbucks
-      - REST_API_HTML_DOCS_ROOT=/go/src/dockerized-go-app/rest-api/static
+      - REST_API_HTML_DOCS_ROOT=/go/src/microservices-demo/rest-api/static
       - LOGXI=*
   rest-api-integration-tester:
     build: ./rest-api-integration-tester
     volumes:
-      - ./rest-api:/go/src/dockerized-go-app/rest-api:ro
+      - ./rest-api:/go/src/microservices-demo/rest-api:ro
     links:
       - rest-api
   db:

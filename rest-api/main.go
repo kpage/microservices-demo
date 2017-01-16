@@ -1,8 +1,8 @@
 package main
 
 import (
-	"dockerized-go-app/rest-api/api"
-	"dockerized-go-app/rest-api/models"
+	"microservices-demo/rest-api/api"
+	"microservices-demo/rest-api/models"
 	"net/http"
 
 	_ "github.com/go-sql-driver/mysql"
