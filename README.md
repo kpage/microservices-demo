@@ -127,10 +127,10 @@ this should not be a problem due to yarn.lock
 - router & load balancer: nginx
 - rest-api: a REST API implemented in golang
 - db: a mariadb database
+- web-client: an HTML single-page app using react+redux
 
 ## Misc TODOs:
 
 - vscode.sh: start preconfigured Visual Studio Code editor in this folder.
 -- Uses X forwarding to display the GUI
 -- Right now VS Code running inside docker starts and displays the GUI, but crashes on my system when opening a folder with no error message.  I spent a few hours trying to experiment/debug but was unable to get this working.
-- node should not proxy to rest-api directly, create a simple nginx service to handle all incoming requests.  Example, / loads static resources from web-client, or anything starting with /api goes to rest-api.  This would reduce need to expose so many ports on host, which could cause annoying conflicts.
