@@ -56,5 +56,5 @@ services:
     build: ./web-client
     user: node
     volumes:
-      - ./web-client:/home/node/app:ro
+      - ./web-client:/home/node/app
       - /home/node/app/node_modules
