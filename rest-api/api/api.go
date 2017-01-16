@@ -23,7 +23,7 @@ func Handlers(logger log.Logger, db models.Datastore) *mux.Router {
 	env = &environment{logger, db}
 	r := mux.NewRouter()
 	r.HandleFunc("/api", apiRoot).Methods("GET")
-	r.HandleFunc("/api/books", env.booksIndex).Methods("GET")
+	r.HandleFunc("/api/orders", env.ordersIndex).Methods("GET")
 	return r
 }
 
@@ -33,7 +33,7 @@ func apiRoot(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	rr := hal.NewResource(models.APIRoot{}, "/api")
-	rr.AddNewLink("books", "/api/books")
+	rr.AddNewLink("restbucks:orders", "/api/orders")
 	// TODO: add links to all possible APIs
 
 	// JSON Encoding
@@ -45,23 +45,24 @@ func apiRoot(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, "%s", j)
 }
 
-func (env *environment) booksIndex(w http.ResponseWriter, r *http.Request) {
+func (env *environment) ordersIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, http.StatusText(405), 405)
 		return
 	}
-	bks, err := env.db.AllBooks()
+	orders, err := env.db.AllOrders()
 	if err != nil {
+		env.logger.Error("REST API error", "err", err)
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
-	rr := hal.NewResource(models.BookResponse{}, "/api/books")
-	for _, bk := range bks {
+	rr := hal.NewResource(models.OrderResponse{}, "/api/orders")
+	for _, o := range orders {
 		// Creating HAL Resources
-		rb := hal.NewResource(bk, fmt.Sprintf("/api/books/%s", bk.Isbn))
+		ro := hal.NewResource(o, fmt.Sprintf("/api/orders/%d", o.Id))
 		// TODO: this embedding will create a json object, not an array, if there is only one item here.  Maybe there is
 		// some way to always force array type?
-		rr.Embed("books", rb)
+		rr.Embed("restbucks:orders", ro)
 	}
 
 	// JSON Encoding

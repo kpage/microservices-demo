@@ -134,3 +134,5 @@ this should not be a problem due to yarn.lock
 - vscode.sh: start preconfigured Visual Studio Code editor in this folder.
 -- Uses X forwarding to display the GUI
 -- Right now VS Code running inside docker starts and displays the GUI, but crashes on my system when opening a folder with no error message.  I spent a few hours trying to experiment/debug but was unable to get this working.
+- order.price includes currency, maybe would be better to separate currency into separate field?
+- Make initial db migration script re-runnable

@@ -57,8 +57,8 @@ func TestRoot(t *testing.T) {
     "self": {
       "href": "/api"
     },
-	"books": {
-      "href": "/api/books"
+	"restbucks:orders": {
+      "href": "/api/orders"
 	}
   }
 }`
@@ -76,11 +76,10 @@ func Test404(t *testing.T) {
 	}
 }
 
-// TODO: remove all books stuff and switch to coffee/orders for restbucks
-func TestBooks(t *testing.T) {
-	// TODO: stage some book data and assert that at least this data is present (ignore additional data?)
+func TestOrders(t *testing.T) {
+	// TODO: stage some data and assert that at least this data is present (ignore additional data?)
 	// if this is a paginated API this may be difficult
-	res, err := http.Get("http://rest-api:3000/api/books")
+	res, err := http.Get("http://rest-api:3000/api/orders")
 	if err != nil {
 		t.Error(err)
 	}
@@ -95,34 +94,36 @@ func TestBooks(t *testing.T) {
 	body := string(bodyBytes)
 	expected := `{
   "_embedded": {
-    "books": [
+    "restbucks:orders": [
       {
         "_links": {
           "self": {
-            "href": "/api/books/ASDFAS23234"
+            "href": "/api/orders/1"
           }
         },
-        "author": "George R.R. Martin",
-        "isbn": "ASDFAS23234",
-        "price": 32.3,
-        "title": "A Dance With Dragons"
+        "id": 1,
+        "location": 0,
+        "orderedDate": "2017-01-15T10:34:50Z",
+        "customerName": "Steve",
+				"status": 0
       },
       {
         "_links": {
           "self": {
-            "href": "/api/books/HJKL9898"
+            "href": "/api/orders/2"
           }
         },
-        "author": "Stieg Larsson",
-        "isbn": "HJKL9898",
-        "price": 9.99,
-        "title": "The Girl With the Dragon Tattoo"
+        "id": 2,
+        "location": 0,
+        "orderedDate": "2017-01-15T10:36:00Z",
+        "customerName": "Larry",
+				"status": 0
       }
     ]
   },
   "_links": {
     "self": {
-      "href": "/api/books"
+      "href": "/api/orders"
     }
   }
 }`
