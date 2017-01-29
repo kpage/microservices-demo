@@ -1,11 +1,13 @@
 package api
 
 import (
-	"microservices-demo/rest-api/models"
 	"encoding/json"
 	"fmt"
+	"microservices-demo/rest-api/models"
 	"net/http"
+	"os"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/mgutz/logxi/v1"
 	"github.com/nvellon/hal"
@@ -19,12 +21,18 @@ type environment struct {
 var env *environment
 
 // Handlers : given the logger and datastore, returns a pointer to a mux.Router that can handle any HTTP requests
-func Handlers(logger log.Logger, db models.Datastore) *mux.Router {
+func Handlers(logger log.Logger, db models.Datastore) http.Handler {
 	env = &environment{logger, db}
 	r := mux.NewRouter()
 	r.HandleFunc("/api", apiRoot).Methods("GET")
 	r.HandleFunc("/api/orders", env.ordersIndex).Methods("GET")
-	return r
+	r.NotFoundHandler = http.HandlerFunc(notFound)
+	return handlers.LoggingHandler(os.Stdout, r)
+}
+
+func notFound(w http.ResponseWriter, r *http.Request) {
+	env.logger.Info("Not found: ", "url", r.URL)
+	http.Error(w, http.StatusText(404), 404)
 }
 
 func apiRoot(w http.ResponseWriter, r *http.Request) {

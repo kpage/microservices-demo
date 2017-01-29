@@ -1,0 +1,27 @@
+---
+  host: "kong:8001"
+  apis:
+    - name: "rest-api"
+      ensure: "present"
+      attributes:
+        upstream_url: "http://rest-api:3000"
+        request_path: "/api"
+      plugins:
+        - name: oauth2
+          attributes:
+            config:
+              enable_password_grant: true
+    - name: "auth"
+      ensure: "present"
+      attributes:
+        upstream_url: "http://auth:3000"
+        request_path: "/auth"
+  consumers:
+    - username: auth-service
+      credentials:
+        - name: oauth2
+          attributes:
+            name: auth-service-name
+            client_id: auth_service
+            client_secret: auth_service_secret
+            redirect_uri: http://www.my-auth-form.com

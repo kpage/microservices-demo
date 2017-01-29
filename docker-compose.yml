@@ -7,7 +7,8 @@ services:
       - ./load-balancer/nginx.conf:/etc/nginx/nginx.conf:ro
       - ./load-balancer/static:/static:ro
     ports:
-      - 80:80
+      - 80
+#     - 80:80
     depends_on:
       - rest-api
       - web-client
@@ -58,3 +59,64 @@ services:
     volumes:
       - ./web-client:/home/node/app
       - /home/node/app/node_modules
+
+  auth:
+    links:
+      - "db:db"
+      - "kong:kong"
+    image: pagekb/golang-gin
+    volumes:
+      - ./auth:/go/src/microservices-demo/auth:ro
+    command: gin -t /go/src/microservices-demo/auth
+    environment:
+      - DB_USERNAME=restbucks
+      - DB_PASSWORD=restbucks
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_NAME=restbucks
+      - LOGXI=*
+##################################################################
+#              Kong-related services                             #
+##################################################################
+  kong-database:
+    image: postgres:9.4
+    ports:
+      - 5432
+    environment:
+      - POSTGRES_USER=kong
+      - POSTGRES_DB=kong
+  kong:
+    image: kong
+    restart: always
+    links:
+      - kong-database:kong-database
+      - rest-api
+    ports:
+      - 80:8000
+      - 8443
+      - 8001
+    expose:
+      - 7946
+      - 7946/udp
+    environment:
+      - KONG_DATABASE=postgres
+      - KONG_PG_HOST=kong-database
+      - KONG_LOG_LEVEL=debug
+    command: kong start --vv
+  kongfig:
+    image: mashupmill/kongfig
+    depends_on:
+      - kong
+    volumes:
+    - './kong/config.yml:/config.yml'
+    command: --path /config.yml --host kong:8001
+  kongfig-dump:
+    image: mashupmill/kongfig
+    depends_on:
+      - kong
+    command: --host kong:8001 dump
+  kong-dashboard:  
+    restart: on-failure
+    image: pgbi/kong-dashboard
+    ports:
+      - 9999:8080

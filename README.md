@@ -10,11 +10,6 @@ To use, first install docker and docker-compose.  Then:
 It's not required to put this project in your GOPATH to run it from the command line, but if you want
 to edit any golang from an IDE I recommend you put it there so the go code will compile in the IDE.
 
-Current capabilities:
-
-- Changes made to .go files will reload the server automatically
-- govendor.sh: run every time third party go dependencies change, then check in the changed vendor folder.
-
 ## REST API
 
 The REST API is written in golang.
@@ -45,8 +40,10 @@ Next, run our vendoring script:
 ```
     $ cd rest-api
     $ ./govendor.sh
+    $ sudo chown -R `whoami`:`whoami` vendor
     $ git status
 ```
+TODO: creates files owned by root right now, fix govendor.sh to create files as the current user
 
 You should now see your dependency in the "vendor" directory and your code should compile correctly.  You might have to
 restart Visual Studio Code to get it to recognize the new vendor package.
@@ -61,6 +58,22 @@ Make sure to add your changes to git:
 
 The REST API tests are designed to run in the docker-compose environment against a live server.  If you start with "docker-compose up", the tests will continuously
 run when any go code is changed.  Tests are written in go in api_test.go and are run from the rest-api-integration-tester container.
+
+#### REST API authorization flow
+
+TODO: enable https in all environments
+Create a new user like this:
+
+curl --data 'username=testuser&password=testpassword' 'http://localhost/auth/accounts'
+
+Get a token like this:
+
+curl --data 'username=testuser&password=testpassword' 'http://localhost/auth/token'
+{"refresh_token":"f7eab65c2d3e43ddb83cfad581bca0bd","token_type":"bearer","access_token":"9b94cf2cad2f47d9a0c641d6fe13a966","expires_in":7200}
+
+Pass token when making requests to the REST API:
+
+curl -X GET --data 'access_token=9b94cf2cad2f47d9a0c641d6fe13a966' 'http://localhost/api/orders'
 
 ## Database
 
@@ -124,7 +137,7 @@ this should not be a problem due to yarn.lock
 - You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
 
 ## Architecture of this app:
-- router & load balancer: nginx
+- kong: API gateway for routing, authentication
 - rest-api: a REST API implemented in golang
 - db: a mariadb database
 - web-client: an HTML single-page app using react+redux
