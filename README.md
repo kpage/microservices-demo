@@ -136,6 +136,28 @@ this should not be a problem due to yarn.lock
 
 - You can see all the yarn commands here: https://yarnpkg.com/en/docs/cli
 
+## API Gateway (Kong)
+
+This app uses kong for an API gateway (routing URIs to the correct backend service, providing API security, etc.)
+
+More about kong: https://getkong.org/
+
+The config for kong is stored at kong/config.yml
+
+The kong web dashboard runs at:
+
+http://localhost:9999
+
+One-time setup of kong dashboard: go to Settings and enter this kong node URL: http://kong:8001 .  This will be saved in a browser cookie.
+
+To play with kong settings, you can change things in the dashboard and then export the current state with:
+
+```
+    $ docker-compose run kongfig-dump
+```
+
+You can then copy desired settings to kong/config.yml
+
 ## Architecture of this app:
 - kong: API gateway for routing, authentication
 - rest-api: a REST API implemented in golang
