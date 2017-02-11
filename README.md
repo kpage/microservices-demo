@@ -62,18 +62,28 @@ run when any go code is changed.  Tests are written in go in api_test.go and are
 #### REST API authorization flow
 
 TODO: enable https in all environments
+
 Create a new user like this:
 
+```
 curl --data 'username=testuser&password=testpassword' 'http://localhost/auth/accounts'
+```
 
 Get a token like this:
 
+```
 curl --data 'username=testuser&password=testpassword' 'http://localhost/auth/token'
+```
+
+```
 {"refresh_token":"f7eab65c2d3e43ddb83cfad581bca0bd","token_type":"bearer","access_token":"9b94cf2cad2f47d9a0c641d6fe13a966","expires_in":7200}
+```
 
 Pass token when making requests to the REST API:
 
+```
 curl -X GET --data 'access_token=9b94cf2cad2f47d9a0c641d6fe13a966' 'http://localhost/api/orders'
+```
 
 ## Database
 
@@ -171,3 +181,4 @@ You can then copy desired settings to kong/config.yml
 -- Right now VS Code running inside docker starts and displays the GUI, but crashes on my system when opening a folder with no error message.  I spent a few hours trying to experiment/debug but was unable to get this working.
 - order.price includes currency, maybe would be better to separate currency into separate field?
 - Make initial db migration script re-runnable
+- Kong dashboard takes a long time to shut down, maybe add dumb_init to help that

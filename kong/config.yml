@@ -11,6 +11,7 @@
           attributes:
             config:
               enable_password_grant: true
+              provision_key: 6ca0c9d2e033476cb57b70b334b524ef
     - name: "auth"
       ensure: "present"
       attributes:

@@ -9,6 +9,7 @@ import (
 	"microservices-demo/auth/models"
 	"net/http"
 	"net/url"
+	"os"
 	"strconv"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -72,9 +73,9 @@ func newToken(w http.ResponseWriter, r *http.Request) {
 	}
 	// TODO: POST to Kong and write Kong's response to this response
 	data := url.Values{}
-	data.Set("client_id", "auth_service")
-	data.Set("client_secret", "auth_service_secret")              // TODO: pass in as env var
-	data.Set("provision_key", "6ca0c9d2e033476cb57b70b334b524ef") // TODO: pass in as env var
+	data.Set("client_id", os.Getenv("KONG_CLIENT_ID"))
+	data.Set("client_secret", os.Getenv("KONG_CLIENT_SECRET"))
+	data.Set("provision_key", os.Getenv("KONG_PROVISION_KEY"))
 	data.Add("authenticated_userid", strconv.FormatInt(account.Id, 10))
 	env.logger.Info("Authenticating user", "newauthenticated_useridHash", strconv.FormatInt(account.Id, 10))
 	data.Add("grant_type", "password")

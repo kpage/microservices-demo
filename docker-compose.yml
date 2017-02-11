@@ -1,23 +1,25 @@
 version: '2'
 services:
 # This is called load-balancer but actually it's just a reverse proxy right now to route to the correct microservices
-  load-balancer:
-    build: ./load-balancer
-    volumes: 
-      - ./load-balancer/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./load-balancer/static:/static:ro
-    ports:
-      - 80
+# TODO: kong now handles this, transfer HAL browser to a separate service and remove this
+#  load-balancer:
+#    build: ./load-balancer
+#    volumes: 
+#      - ./load-balancer/nginx.conf:/etc/nginx/nginx.conf:ro
+#      - ./load-balancer/static:/static:ro
+#    ports:
 #     - 80:80
-    depends_on:
-      - rest-api
-      - web-client
+#    depends_on:
+#      - rest-api
+#      - web-client
   rest-api:
     links:
       - "db:db"
     image: pagekb/golang-gin
     volumes:
       - ./rest-api:/go/src/microservices-demo/rest-api:ro
+    ports:
+      - 3000:3000
     command: gin -t /go/src/microservices-demo/rest-api
     environment:
       - DB_USERNAME=restbucks
@@ -59,7 +61,6 @@ services:
     volumes:
       - ./web-client:/home/node/app
       - /home/node/app/node_modules
-
   auth:
     links:
       - "db:db"
@@ -74,6 +75,9 @@ services:
       - DB_HOST=db
       - DB_PORT=3306
       - DB_NAME=restbucks
+      - KONG_CLIENT_ID=auth_service
+      - KONG_CLIENT_SECRET=auth_service_secret
+      - KONG_PROVISION_KEY=6ca0c9d2e033476cb57b70b334b524ef
       - LOGXI=*
 ##################################################################
 #              Kong-related services                             #
