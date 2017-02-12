@@ -10,7 +10,7 @@ ENV NODE_ENV $NODE_ENV
 
 EXPOSE 4000
 
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.18.1
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash -s -- --version 0.19.1
 ENV PATH="$HOME/.yarn/bin:$PATH"
 
 # also add .yarnrc, if present (if we want to use our nexus to proxy yarn)
