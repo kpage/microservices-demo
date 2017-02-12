@@ -1,6 +1,11 @@
 ---
   host: "kong:8001"
   apis:
+    - name: web-client
+      ensure: "present"
+      attributes:
+        upstream_url: 'http://web-client:4000'
+        request_path: /
     - name: "rest-api"
       ensure: "present"
       attributes:
