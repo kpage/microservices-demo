@@ -182,3 +182,4 @@ You can then copy desired settings to kong/config.yml
 - order.price includes currency, maybe would be better to separate currency into separate field?
 - Make initial db migration script re-runnable
 - Kong dashboard takes a long time to shut down, maybe add dumb_init to help that
+- Add a kong plugin or service at / to provide a HAL root to the various apis like /api and /auth
