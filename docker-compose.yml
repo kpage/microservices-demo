@@ -121,6 +121,6 @@ services:
     command: --host kong:8001 dump
   kong-dashboard:  
     restart: on-failure
-    image: pgbi/kong-dashboard
+    build: ./kong-dashboard
     ports:
       - 9999:8080

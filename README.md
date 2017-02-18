@@ -181,5 +181,4 @@ You can then copy desired settings to kong/config.yml
 -- Right now VS Code running inside docker starts and displays the GUI, but crashes on my system when opening a folder with no error message.  I spent a few hours trying to experiment/debug but was unable to get this working.
 - order.price includes currency, maybe would be better to separate currency into separate field?
 - Make initial db migration script re-runnable
-- Kong dashboard takes a long time to shut down, maybe add dumb_init to help that
 - Add a kong plugin or service at / to provide a HAL root to the various apis like /api and /auth
