@@ -1,9 +1,10 @@
 import React, { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import { fetchOrdersIfNeeded, requestOrdersPage, requestOrderCoffeeForm, cancelUnfinishedOrder } from '../actions'
+import { fetchOrdersIfNeeded, requestOrdersPage, requestOrderCoffeeForm, cancelUnfinishedOrder, login } from '../actions'
 import OrderList from '../components/OrderList'
 import Order from '../components/Order'
 //import SVGIcon from 'grommet/components/SVGIcon'
+import Button from 'grommet/components/Button'
 import Java from 'grommet/components/icons/base/Java'
 import Title from 'grommet/components/Title'
 //import Logo from 'grommet/components/Logo'
@@ -11,6 +12,7 @@ import Title from 'grommet/components/Title'
 class App extends Component {
     constructor(props) {
         super(props)
+        this.handleLoginClick = this.handleLoginClick.bind(this)
         this.handlePageClick = this.handlePageClick.bind(this)
         this.handleOrderCoffeeClick = this.handleOrderCoffeeClick.bind(this)
         this.handleCancelUnfinishedOrderClick = this.handleCancelUnfinishedOrderClick.bind(this)
@@ -18,10 +20,17 @@ class App extends Component {
 
     componentDidMount() {
         const { dispatch } = this.props
-        dispatch(fetchOrdersIfNeeded())
+        //dispatch(fetchOrdersIfNeeded())
     }
 
     componentWillReceiveProps(nextProps) {
+    }
+
+    handleLoginClick(e) {
+        e.preventDefault()
+
+        const { dispatch } = this.props
+        dispatch(login())
     }
 
     handlePageClick(linkRef, e) {
@@ -57,6 +66,7 @@ class App extends Component {
                     </div>
                     :
                     <div>
+                        <Button label='Login' onClick={this.handleLoginClick} href='#' />
                         <Title onClick={this.handleOrderCoffeeClick}>
                             <Java colorIndex="brand" />
                             Order Coffee

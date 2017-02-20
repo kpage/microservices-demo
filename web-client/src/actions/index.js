@@ -1,13 +1,18 @@
 import fetch from 'isomorphic-fetch'
 import client from '../client'
 import follow from '../follow' // function to hop multiple links by "rel"
+import post from '../post' // function to hop multiple links by "rel"
 const root = '/api';
+// Can remove this separate api root once server implements a top-level HATEOAS root that includes links to /api and /auth
+const authRoot = '/auth';
 
 export const REQUEST_ORDERS = 'REQUEST_ORDERS'
 export const RECEIVE_ORDERS = 'RECEIVE_ORDERS'
 export const REQUEST_ORDERS_PAGE = 'REQUEST_ORDERS_PAGE'
 export const REQUEST_ORDER_COFFEE_FORM = 'REQUEST_ORDER_COFFEE_FORM'
 export const CANCEL_UNFINISHED_ORDER = 'CANCEL_UNFINISHED_ORDER'
+export const LOGGING_IN = 'LOGGING_IN'
+export const LOGGED_IN = 'LOGGED_IN'
 //export const SELECT_REDDIT = 'SELECT_REDDIT'
 //export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
@@ -78,5 +83,26 @@ export function requestOrderCoffeeForm() {
 export function cancelUnfinishedOrder() {
     return {
         type: CANCEL_UNFINISHED_ORDER
+    }
+}
+
+export function loggingIn() {
+    return {
+        type: LOGGING_IN
+    }
+}
+
+export function loggedIn(token) {
+    return {
+        type: LOGGED_IN,
+        "token": token
+    }
+}
+
+export function login() {
+    return dispatch => {
+        dispatch(loggingIn())
+        return post(client, authRoot, [{rel: 'auth:token', entity: {username: "testuser", password: "testpassword"}}])
+            .then(response => dispatch(loggedIn(response)))
     }
 }

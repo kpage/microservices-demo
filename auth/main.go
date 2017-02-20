@@ -15,12 +15,18 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/mgutz/logxi/v1"
+	"github.com/nvellon/hal"
 	"gopkg.in/hlandau/passlib.v1"
 )
 
 type environment struct {
 	logger log.Logger
 	db     models.Datastore
+}
+
+type jsonRequest struct {
+	Username string `json:"username"`
+	Password string `json:"password"`
 }
 
 var env *environment
@@ -40,6 +46,7 @@ func main() {
 func handle() *mux.Router {
 	r := mux.NewRouter()
 	// TODO: endpoint to change password (username, old password, new password)
+	r.HandleFunc("/auth", apiRoot).Methods("GET")
 	r.HandleFunc("/auth/token", newToken).Methods("POST")
 	r.HandleFunc("/auth/accounts", newAccount).Methods("POST")
 	r.NotFoundHandler = http.HandlerFunc(notFound)
@@ -51,19 +58,59 @@ func notFound(w http.ResponseWriter, r *http.Request) {
 	http.Error(w, http.StatusText(404), 404)
 }
 
+func apiRoot(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, http.StatusText(405), 405)
+		return
+	}
+	w.Header().Set("Content-Type", "application/hal+json")
+	rr := hal.NewResource(models.APIRoot{}, "/auth")
+	// TODO: add username and password params, indication that this is POST?
+	rr.AddNewLink("auth:token", "/auth/token")
+	rr.AddNewLink("auth:accounts", "/auth/accounts")
+	// TODO: add links to all possible APIs
+
+	// JSON Encoding
+	j, err := json.MarshalIndent(rr, "", "  ")
+	if err != nil {
+		fmt.Printf("%s", err)
+	}
+
+	fmt.Fprintf(w, "%s", j)
+}
+
 func newToken(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "POST" {
 		http.Error(w, http.StatusText(405), 405)
 		return
 	}
-	username := r.FormValue("username")
+	// TODO: validate presence of username and password form values and return 4xx if not present
+	var username, password string
+	if r.Header.Get("Content-Type") == "application/json" {
+		var t jsonRequest
+		if r.Body == nil {
+			http.Error(w, "Please send a request body", 400)
+			return
+		}
+		err := json.NewDecoder(r.Body).Decode(&t)
+		if err != nil {
+			http.Error(w, err.Error(), 400)
+			return
+		}
+		username = t.Username
+		password = t.Password
+	} else {
+		username = r.FormValue("username")
+		password = r.FormValue("password")
+	}
+
 	account, err := env.db.GetAccountByUsername(username)
 	if err != nil {
 		env.logger.Error("Error getting account by username", "err", err)
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
-	password := r.FormValue("password")
+
 	newHash, err := passlib.Verify(password, account.PasswordHash)
 	if err != nil {
 		http.Error(w, http.StatusText(401), 401)
