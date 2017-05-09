@@ -5,12 +5,13 @@
       ensure: "present"
       attributes:
         upstream_url: 'http://web-client:4000'
-        request_path: /
+        uris: ["/"]
     - name: "rest-api"
       ensure: "present"
       attributes:
         upstream_url: "http://rest-api:3000"
-        request_path: "/api"
+        uris: ["/api"]
+        strip_uri: false
       plugins:
         - name: oauth2
           attributes:
@@ -21,7 +22,8 @@
       ensure: "present"
       attributes:
         upstream_url: "http://auth:3000"
-        request_path: "/auth"
+        uris: ["/auth"]
+        strip_uri: false
   consumers:
     - username: auth-service
       credentials:

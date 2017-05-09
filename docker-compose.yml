@@ -90,7 +90,7 @@ services:
       - POSTGRES_USER=kong
       - POSTGRES_DB=kong
   kong:
-    image: kong
+    image: kong:0.10.2
     restart: always
     links:
       - kong-database:kong-database
