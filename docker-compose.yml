@@ -90,8 +90,8 @@ services:
       - POSTGRES_USER=kong
       - POSTGRES_DB=kong
   kong:
-    image: kong:0.10.2
-    restart: always
+    image: cknowles/kong:logging_0.10
+#    restart: always
     links:
       - kong-database:kong-database
       - rest-api
