@@ -44,13 +44,10 @@ func apiRoot(w http.ResponseWriter, r *http.Request) {
 	rr.AddNewLink("restbucks:orders", "/api/orders")
 	// TODO: add links to all possible APIs
 
-	// JSON Encoding
-	j, err := json.MarshalIndent(rr, "", "  ")
-	if err != nil {
+	if err := json.NewEncoder(w).Encode(rr); err != nil {
 		fmt.Printf("%s", err)
+		return
 	}
-
-	fmt.Fprintf(w, "%s", j)
 }
 
 func (env *environment) ordersIndex(w http.ResponseWriter, r *http.Request) {
@@ -72,12 +69,8 @@ func (env *environment) ordersIndex(w http.ResponseWriter, r *http.Request) {
 		// some way to always force array type?
 		rr.Embed("restbucks:orders", ro)
 	}
-
-	// JSON Encoding
-	j, err := json.MarshalIndent(rr, "", "  ")
-	if err != nil {
+	if err := json.NewEncoder(w).Encode(rr); err != nil {
 		fmt.Printf("%s", err)
+		return
 	}
-
-	fmt.Fprintf(w, "%s", j)
 }

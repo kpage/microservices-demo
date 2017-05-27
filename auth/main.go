@@ -69,11 +69,9 @@ func newToken(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "application/hal+json; charset=utf-8")
 		w.WriteHeader(401)
 		em := hal.NewResource(models.Error{Message: "Username or password is incorrect."}, "/auth/token")
-		j, err := json.MarshalIndent(em, "", "  ")
-		if err != nil {
+		if err := json.NewEncoder(w).Encode(em); err != nil {
 			fmt.Printf("%s", err)
 		}
-		fmt.Fprintf(w, "%s", j)
 		return
 	}
 	password := r.FormValue("password")
@@ -163,11 +161,9 @@ func newAccount(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// TODO: return HAL representation of account, not raw json
-	j, err := json.MarshalIndent(newAccount, "", "  ")
-	if err != nil {
+	if err := json.NewEncoder(w).Encode(newAccount); err != nil {
 		env.logger.Error("Error serializing Account to JSON", "err", err, "username", username)
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
-	fmt.Fprintf(w, "%s", j)
 }
