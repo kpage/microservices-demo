@@ -1,9 +1,11 @@
 // A simple utility for following HAL links in a RESTful API
 // https://github.com/spring-guides/tut-react-and-spring-data-rest/blob/89c5b5191c5e36785b670abe195d35b5e405b223/hypermedia/src/main/resources/static/follow.js
+// TODO: think of a way to avoid "complecting" access_token and follow.  
 module.exports = function follow(api, rootPath, relArray) {
     var root = api({
         method: 'GET',
-        path: rootPath
+        path: rootPath,
+        params: {access_token: localStorage.getItem('access_token')}
     });
 
     return relArray.reduce(function(root, arrayItem) {

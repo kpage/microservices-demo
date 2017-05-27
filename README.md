@@ -114,6 +114,8 @@ This could be deployed separately from the other services to run migrations in p
 TODO: add a frontend web client in HTML & JS to demonstrate using the REST API.  The build is working right now, but the code was
 scavenged from an unrelated project that does not actually exercise the API in this project yet.
 
+TODO: consider npm library "traverson" for consuming HAL+JSON instead of follow.js
+
 TODO: node_modules: store base node_modules image that is usable by prod and ensures same modules for all devs.  Right now, node_modules will be created for each dev separately, although
 this should not be a problem due to yarn.lock
 

@@ -8,6 +8,12 @@ export const RECEIVE_ORDERS = 'RECEIVE_ORDERS'
 export const REQUEST_ORDERS_PAGE = 'REQUEST_ORDERS_PAGE'
 export const REQUEST_ORDER_COFFEE_FORM = 'REQUEST_ORDER_COFFEE_FORM'
 export const CANCEL_UNFINISHED_ORDER = 'CANCEL_UNFINISHED_ORDER'
+export const LOGIN_REQUEST = 'LOGIN_REQUEST'
+export const LOGIN_SUCCESS = 'LOGIN_SUCCESS'
+export const LOGIN_FAILURE = 'LOGIN_FAILURE'
+export const LOGOUT_REQUEST = 'LOGOUT_REQUEST'
+export const LOGOUT_SUCCESS = 'LOGOUT_SUCCESS'
+export const LOGOUT_FAILURE = 'LOGOUT_FAILURE'
 //export const SELECT_REDDIT = 'SELECT_REDDIT'
 //export const INVALIDATE_REDDIT = 'INVALIDATE_REDDIT'
 
@@ -56,7 +62,8 @@ function fetchOrders() {
     return dispatch => {
         dispatch(requestOrders())
         // hard-code page size of 5 for now, but this could be made into a parameter
-        return follow(client, root, [{rel: 'restbucks:orders', params: {size: 5}}])
+        // TODO: have 'follow' pass access_token for every request, not individually
+        return follow(client, root, [{rel: 'restbucks:orders', params: {size: 5, access_token: localStorage.getItem('access_token')}}])
             .then(response => response.entity)
             .then(json => dispatch(receiveOrders(json)))
     }
@@ -79,4 +86,90 @@ export function cancelUnfinishedOrder() {
     return {
         type: CANCEL_UNFINISHED_ORDER
     }
+}
+
+function requestLogin(creds) {
+    return {
+        type: LOGIN_REQUEST,
+        isFetching: true,
+        isAuthenticated: false,
+        creds
+    }
+}
+
+function receiveLogin(user) {
+    return {
+        type: LOGIN_SUCCESS,
+        isFetching: false,
+        isAuthenticated: true,
+        id_token: user.id_token
+    }
+}
+
+function loginError(message) {
+    return {
+        type: LOGIN_FAILURE,
+        isFetching: false,
+        isAuthenticated: false,
+        message
+    }
+}
+
+// Calls the API to get a token and
+// dispatches actions along the way
+export function loginUser(creds) {
+    // TODO: check that these are the correct headers and body to send to our auth endpoint
+    let config = {
+        method: 'POST',
+        headers: { 'Content-Type':'application/x-www-form-urlencoded' },
+        body: `username=${creds.username}&password=${creds.password}`
+    }
+
+  return dispatch => {
+    // We dispatch requestLogin to kickoff the call to the API
+    dispatch(requestLogin(creds))
+
+    // TODO: remove hard-coded absolute url with localhost
+    return fetch('http://localhost/auth/token', config)
+            .then(response =>
+                // TODO: is "user" the best name for this response entity?  maybe "token"?
+                response.json().then(user => ({ user, response }))
+            ).then(({ user, response }) =>  {
+                if (!response.ok) {
+                    // If there was a problem, we want to
+                    // dispatch the error condition
+                    dispatch(loginError(user.message))
+                    return Promise.reject(user)
+                } else {
+                    // If login was successful, set the token in local storage
+                    localStorage.setItem('access_token', user.access_token)
+                    // Dispatch the success action
+                    dispatch(receiveLogin(user))
+                }
+            }).catch(err => console.log("Error: ", err))
+    }
+}
+
+function requestLogout() {
+  return {
+    type: LOGOUT_REQUEST,
+    isFetching: true,
+    isAuthenticated: true
+  }
+}
+
+function receiveLogout() {
+  return {
+    type: LOGOUT_SUCCESS,
+    isFetching: false,
+    isAuthenticated: false
+  }
+}
+
+export function logoutUser() {
+  return dispatch => {
+    dispatch(requestLogout())
+    localStorage.removeItem('access_token')
+    dispatch(receiveLogout())
+  }
 }

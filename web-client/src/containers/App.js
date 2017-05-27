@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { fetchOrdersIfNeeded, requestOrdersPage, requestOrderCoffeeForm, cancelUnfinishedOrder } from '../actions'
 import OrderList from '../components/OrderList'
 import Order from '../components/Order'
+import Navbar from '../components/Navbar'
 //import SVGIcon from 'grommet/components/SVGIcon'
 import Java from 'grommet/components/icons/base/Java'
 import Title from 'grommet/components/Title'
@@ -46,10 +47,15 @@ class App extends Component {
     }
 
     render() {
-        const { orders } = this.props
+        const { orders, isAuthenticated, errorMessage, dispatch } = this.props
         const isEmpty = orders.items.length === 0
         return (
             <div>
+                <Navbar
+                    isAuthenticated={isAuthenticated}
+                    errorMessage={errorMessage}
+                    dispatch={dispatch}
+                    />
                 {orders.isOrderCoffeeFormOpen
                     ? 
                     <div>
@@ -86,16 +92,21 @@ App.propTypes = {
             PropTypes.shape(Order.propTypes)
         ).isRequired,
     }),
+    isAuthenticated: PropTypes.bool.isRequired,
+    errorMessage: PropTypes.string,
 //  isFetching: PropTypes.bool.isRequired,
 //  lastUpdated: PropTypes.number,
     dispatch: PropTypes.func.isRequired
 }
 
 function mapStateToProps(state) {
-    const { orders } = state
+    const { orders, auth } = state
+    const { isAuthenticated, errorMessage } = auth
   
     return {
-        orders
+        orders,
+        isAuthenticated,
+        errorMessage
     }
 }
 
