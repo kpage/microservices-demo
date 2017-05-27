@@ -15,6 +15,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/mgutz/logxi/v1"
+	"github.com/nvellon/hal"
 	"gopkg.in/hlandau/passlib.v1"
 )
 
@@ -25,6 +26,7 @@ type environment struct {
 
 var env *environment
 
+// TODO: this function needs to be exported into different modules, tested, converted fully to HAL, and error handling improved
 func main() {
 	logger := log.New("")
 	logger.Info("auth api starting...")
@@ -61,6 +63,17 @@ func newToken(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		env.logger.Error("Error getting account by username", "err", err)
 		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+	if account == nil {
+		w.Header().Set("Content-Type", "application/hal+json; charset=utf-8")
+		w.WriteHeader(401)
+		em := hal.NewResource(models.Error{Message: "Username or password is incorrect."}, "/auth/token")
+		j, err := json.MarshalIndent(em, "", "  ")
+		if err != nil {
+			fmt.Printf("%s", err)
+		}
+		fmt.Fprintf(w, "%s", j)
 		return
 	}
 	password := r.FormValue("password")
@@ -113,6 +126,7 @@ func newToken(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
+	// TODO: what would a HAL representation of an access token look like?  What possible links are there?
 	fmt.Fprintf(w, "%s", body)
 }
 
