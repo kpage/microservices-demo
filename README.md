@@ -1,5 +1,7 @@
 The goal of this repo is to demo a development environment running in docker-compose.
 
+NOTE: this is a work in progress and may not yet be in a fully working state.
+
 To use, first install docker and docker-compose.  Then:
 
     $ cd $GOPATH/src
