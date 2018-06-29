@@ -58,6 +58,12 @@ Make sure to add your changes to git:
     $ git add rest-api/vendor
     $ git commit
 ```
+
+Note on REST API documentation: I chose to separate documentation concerns by having the core REST API code just return
+responses in a hal+json format that could be read by any compatible API browser (HAL browser, Swagger, etc.).  Currently
+there is a small nginx proxy (rest-api-proxy) that sits in front of rest-api to handle showing this documentation.  This
+might be better served as a Kong plugin later.  The idea behind this separation of concerns was to avoid having repeated logic in every backend service that has to serve up documentation pages.
+
 #### REST API Tests:
 
 The REST API tests are designed to run in the docker-compose environment against a live server.  If you start with "docker-compose up", the tests will continuously

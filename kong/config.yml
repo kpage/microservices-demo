@@ -9,7 +9,7 @@
     - name: "rest-api"
       ensure: "present"
       attributes:
-        upstream_url: "http://rest-api:3000"
+        upstream_url: "http://rest-api-proxy:3000"
         uris: ["/api"]
         strip_uri: false
       plugins:
