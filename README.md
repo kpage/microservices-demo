@@ -162,8 +162,6 @@ The kong web dashboard runs at:
 
 http://localhost:9999
 
-One-time setup of kong dashboard: go to Settings and enter this kong node URL: http://kong:8001 .  This will be saved in a browser cookie.
-
 To play with kong settings, you can change things in the dashboard and then export the current state with:
 
 ```

@@ -119,8 +119,11 @@ services:
     depends_on:
       - kong
     command: --host kong:8001 dump
-  kong-dashboard:  
+  kong-dashboard:
+    depends_on:
+      - kong
     restart: on-failure
     build: ./kong-dashboard
     ports:
       - 9999:8080
+    command: start --kong-url http://kong:8001
