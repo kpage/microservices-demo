@@ -9,7 +9,9 @@ To use, first install docker and docker-compose.  Then:
     $ cd microservices-demo
     $ docker-compose up
 
-It's not required to put this project in your GOPATH to run it from the command line, but if you want
+If docker-compose stops with a message like 'Container "30a7960c4c89" is unhealthy', you can just re-run 'docker-compose up'.  Usually this means that a database migration is taking some time and a container timed out waiting to start.
+
+Note: it's not required to put this project in your GOPATH to run it from the command line, but if you want
 to edit any golang from an IDE I recommend you put it there so the go code will compile in the IDE.
 
 ## REST API
